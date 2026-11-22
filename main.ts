@@ -14,4 +14,12 @@ const ENTRY =
 
 const outDir = "/output";
 mkdirSync(outDir, { recursive: true });
+
+// Gate: the competition entry must be 1-280 Unicode code points. Count
+// code points (not UTF-16 units) so astral-plane characters count once,
+// and fail loudly instead of writing an out-of-range entry.
+const entryLength = [...ENTRY].length;
+if (entryLength < 1 || entryLength > 280) {
+  throw new Error(`entry must be 1-280 code points, got ${entryLength}`);
+}
 writeFileSync(join(outDir, "entry.txt"), ENTRY, "utf8");
